@@ -1,0 +1,33 @@
+body {
+    margin: 0;
+    padding: 0;
+}
+
+header {
+    border-bottom: 1px solid #000;
+    height: auto;
+    background-color: #87cefa;
+}
+
+nav {
+    display: flex; 
+    justify-content: space-between; 
+    align-items: end;
+    list-style: none; 
+    padding: 0;
+}
+
+nav li {
+    margin: 10px; 
+}
+
+nav li a {
+    text-decoration: none; 
+    padding: 10px;
+}
+
+.imgLogo {
+    background-image: url(/Imagens/Logo.jpeg);
+    background-repeat: no-repeat;
+    background-size: cover;
+}
