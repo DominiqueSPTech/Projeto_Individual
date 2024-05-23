@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>BRSpeak | Login</title>
+
+    <script src="./js/sessao.js"></script>
+
+    <link rel="stylesheet" href="./css/Login.css">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+</head>
+
+<body>
+
+    <!--Header-->
+
+    <header>
+        <nav class="navbar">
+            <div class="logo">
+                    <li><p>BR Speak</p></li>        
+            </div>
+            <div class="nav">
+                <li><a href="index.html">Início</a></li>
+                <p>|</p>
+                <li><a href="cadastro.html">Cadastro</a></li>
+            </div>
+        </nav>
+    </header><br><br><br><br><br><br>
+
+
+    <div class="login">
+        <div class="alerta_erro">
+            <div class="card_erro" id="cardErro">
+                <span id="mensagem_erro"></span>
+            </div>
+        </div>
+        <div class="container">
+            <h1 class="titulo">Login</h1> 
+            <div class="input-container">                                     
+                <h2 class="titulo2">Email</h2>
+                <input id="input_email" class="digitar" type="email" placeholder="Digite o seu email...">
+                <h2 class="titulo2">Senha</h2>
+                <input id="input_senha" class="digitar" type="password" placeholder="Digite a sua senha...">
+            </div>   <br>    
+            <div class="botoes-container">
+                <button onclick="entrar()">Logar</button>
+                <button onclick="cancelar()">Cancelar</button>
+            </div>
+            <p>Não tem conta? <a href="cadastro.html">Fazer cadastro</a></p>
+        </div> 
+    </div>
+
+    
+
+</body>
+
+</html>
+
+<script>
+
+    function cancelar() {
+        input_email.value = ''
+        input_senha.value = ''
+    }
+
+
+    function entrar() {
+
+        var emailVar = input_email.value;
+        var senhaVar = input_senha.value;
+
+        if (emailVar == "" || senhaVar == "") {
+            cardErro.style.display = "block"
+            mensagem_erro.innerHTML = "(Mensagem de erro para todos os campos em branco)";
+            return false;
+        }
+        
+
+        console.log("FORM LOGIN: ", emailVar);
+        console.log("FORM SENHA: ", senhaVar);
+
+        fetch("/usuarios/autenticar", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                emailServer: emailVar,
+                senhaServer: senhaVar
+            })
+        }).then(function (resposta) {
+            console.log("ESTOU NO THEN DO entrar()!")
+
+            if (resposta.ok) {
+                console.log(resposta);
+
+                resposta.json().then(json => {
+                    console.log(json);
+                    console.log(JSON.stringify(json));
+                    sessionStorage.EMAIL_USUARIO = json.email;
+                    sessionStorage.NOME_USUARIO = json.nome;
+                    sessionStorage.ID_USUARIO = json.id;
+                    sessionStorage.NIVEL_USUARIO = json.nivel;
+
+                    alert(`Login realisado com sucesso!`)
+
+                    setTimeout(function () {
+                        window.location = "./dashboard/dashboard.html";
+                    }, 1000); // apenas para exibir o loading
+
+                });
+                
+            } else {
+
+                console.log("Houve um erro ao tentar realizar o login!");
+
+                resposta.text().then(texto => {
+                    var erro = console.error(texto);
+                    alert(`Email ou senha inválidos`);
+                });
+            }
+
+        }).catch(function (erro) {
+            console.log(erro);
+        })
+
+        return false;
+    }
+
+
+</script>
