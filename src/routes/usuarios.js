@@ -12,4 +12,12 @@ router.post("/autenticar", function (req, res) {
     usuarioController.autenticar(req, res);
 });
 
+router.post("/resposta", function (req, res) {
+    usuarioController.resposta(req, res);
+});
+
+router.get("/metrica/:user", function (req, res) {
+    usuarioController.metrica(req, res);
+});
+
 module.exports = router;

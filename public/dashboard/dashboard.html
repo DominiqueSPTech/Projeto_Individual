@@ -5,33 +5,267 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BRSpeak | Dashboard</title>
     <link rel="stylesheet" href="../CSS/PagUser.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-    
     <div class="sidebar">
         <h2>Menu</h2>
         <h3>Olá, <span id="b_usuario">usuário</span>!</h3>
-        <h4>Seu nível:<span id="b_nivel">nível</span></h4>
-
-    </div>
+        <h4>Seu nível: <span id="b_nivel">nível</span></h4>
         
-    <header>
-        <nav class="navbar">
-            <div class="logo">
-                        <li><p>BR Speak</p></li>        
-            </div>
-            <div class="nav">
-                <li><a href="../index.html">Sair da sua conta</a></li>
-            </div>
-        </nav>
-    </header>
+            <p><a href="../index.html">Sair</a></p>
 
+            
+        
+    </div>
+
+        <div id="graficoT" style="display: none; margin-left: 40%">
+            <h1>Gráfico de Tentativas</h1>
+            <div id="" class="graph">
+                    <canvas id="myChart"></canvas>
+            </div> 
+
+            <button onclick="voltar()">Voltar para o Quiz</button>
+        </div> 
     
-    
+    <div id="quiz" class="main" style="margin-left: 32%; display:block">
+        <h1>Quiz de inglês</h1>
+        
+
+        <div class="content">
+            <h2>Questão 1</h2>
+            <p>She arrived at 8 a.m., opened the door and shouted "Good____!</p>
+            <label ><input id type="radio" name="Q1" value="Morning">Morning</label><br><br>
+            <label ><input id type="radio" name="Q1" value="Night">Night</label><br><br>
+            <label ><input id type="radio" name="Q1" value="Bye">Bye</label><br><br>
+        </div><br>
+
+        <div class="content">
+            <h2>Questão 2</h2>
+            <p>I decided to put the table ______ the wall of the living room</p>
+            <label ><input id type="radio" name="Q2" value="Opposed to">Opposed to</label><br><br>
+            <label ><input id type="radio" name="Q2" value="Against">Against</label><br><br>
+            <label ><input id type="radio" name="Q2" value="Versus">Versus</label><br><br>
+        </div><br>
+
+        <div class="content">
+            <h2>Questão 3</h2>
+            <p>The sold out tickets made it clear that the event was _____ popular</p>
+            <label ><input id type="radio" name="Q3" value="Somewhat">Somewhat</label><br><br>
+            <label ><input id type="radio" name="Q3" value="Extremely">Extremely</label><br><br>
+            <label ><input id type="radio" name="Q3" value="Relatively">Relatively</label><br><br>
+        </div><br>
+
+        <div class="content">
+            <h2>Questão 4</h2>
+            <p>He thought the spicy tofu dish was _____ tasty, he ordered the dish again</p>
+            <label ><input id type="radio" name="Q4" value="Mainly">Mainly</label><br><br>
+            <label ><input id type="radio" name="Q4" value="Fairly">Fairly</label><br><br>
+            <label ><input id type="radio" name="Q4" value="Especially">Especially</label><br><br>
+        </div><br>
+        
+        <div class="content">
+            <h2>Questão 5</h2>
+            <p>Carl will do things for purely _____ reasons, but sometimes he is capable of great generosity</p>
+            <label ><input id type="radio" name="Q5" value="Empathetic">Empathetic</label><br><br>
+            <label ><input id type="radio" name="Q5" value="Selfish">Selfish</label><br><br>
+            <label ><input id type="radio" name="Q5" value="Juvenile">Juvenile</label><br><br>
+        </div><br>
+
+        <div class="content">
+            <h2>Questão 6</h2>
+            <p>Mr. Dean's assistant won't be able to _____ the hotel room he had requested</p>
+            <label ><input id type="radio" name="Q6" value="Look him up at">Look him up at</label><br><br>
+            <label ><input id type="radio" name="Q6" value="Fairly">Fairly</label><br><br>
+            <label ><input id type="radio" name="Q6" value="Book">Book</label><br><br>  
+        </div><br>
+
+        <div class="content">
+            <h2>Questão 7</h2>
+            <p>Which word is a synonym for "happy"?</p>
+            <label><input id type="radio" name="Q7" value="Sad">Sad</label><br><br>
+            <label><input id type="radio" name="Q7" value="Joyful">Joyful</label><br><br>
+            <label><input id type="radio" name="Q7" value="Angry">Angry</label><br><br>
+        </div><br>
+
+        <div class="content">
+            <h2>Questão 8</h2>
+            <p>What is the past tense of "to go"?</p>
+            <label><input id type="radio" name="Q8" value="Went">Went</label><br><br>
+            <label><input id type="radio" name="Q8" value="Goed">Goed</label><br><br>
+            <label><input id type="radio" name="Q8" value="Gone">Gone</label><br><br>
+        </div><br>
+    <center>
+        <div id="div_msg"></div>
+        <button onclick="submit()">Enviar respostas</button>
+        <button onclick="grafico()">Ver Gráfico</button>
+        
+    </center>
+    </div>
 </body>
 </html>
 
 <script>
+    var user = sessionStorage.ID_USUARIO;
+    obterDadosGrafico(user)
     b_usuario.innerHTML = sessionStorage.NOME_USUARIO;
     b_nivel.innerHTML = sessionStorage.NIVEL_USUARIO;
+
+    var porcentagem = 0
+
+    var lista_resposta = [
+        'Morning',
+        'Against',
+        'Extremely',
+        'Especially',
+        'Selfish',
+        'Book',
+        'Joyful',
+        'Went'
+    ]
+
+    function submit() {
+            var resposta = document.querySelectorAll(".main input[type='radio']:checked");
+            div_msg.innerHTML = ""; 
+
+            if (resposta.length < 8) {
+                alert(`Responda todas as questões`);
+            } else {
+                
+                var acertos = 0;
+
+                for (let index = 0; index < resposta.length; index++) {
+                    if (resposta[index].value === lista_resposta[index]) {
+                        acertos++;
+                        div_msg.innerHTML += `Questão ${index + 1} <span style="color: green;">correta</span>!<br>`;
+                    } else {
+                        div_msg.innerHTML += `Questão ${index + 1} <span style="color: red;">incorreta</span><br>`;
+                    }
+                }
+                porcentagem = (acertos / 8) * 100
+                div_msg.innerHTML += `<br>Total de acertos: ${porcentagem}%`;
+
+
+                fetch("/usuarios/resposta", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        // crie um atributo que recebe o valor recuperado aqui
+                        // Agora vá para o arquivo routes/usuario.js
+                        acertosServer: porcentagem,
+                        usuarioServer: user
+                    }),
+                })
+
+                
+
+                var radios = document.querySelectorAll(".main input[type='radio']");
+                radios.forEach(radio => {
+                radio.checked = false;
+            });
+            }
+    }
+
+    function obterDadosGrafico(user) {
+        
+        if (!user) {
+            console.error("ID do usuário está undefined");
+            return;
+        }
+        fetch(`/usuarios/metrica/${user}`, { cache: 'no-store' })
+            .then(function (response) {
+                if (response.ok) {
+                    response.json().then(function (resposta) {
+                        console.log(`Dados recebidos: ${JSON.stringify(resposta)}`);
+                        resposta.reverse();
+                        plotarGrafico(resposta, user); // Ensure `resposta` is passed correctly
+                    });
+                } else {
+                    console.error('Nenhum dado encontrado ou erro na API');
+                }
+            })
+            .catch(function (error) {
+                console.error(`Erro na obtenção dos dados p/ gráfico: ${error.message}`);
+            });
+    }
+
+    function plotarGrafico(dados) {
+        var ctx = document.getElementById('myChart').getContext('2d');
+
+        if (dados && dados.length > 0) {
+           var momentos = dados.map(dado => dado.momento_grafico);
+        var acertos = dados.map(dado => dado.acertos); 
+        } else {
+            console.log('iniciando plotagem do gráfico...');
+        }
+        
+
+        
+
+        // Criando estrutura para plotar gráfico - labels
+        // let labels = momentos;
+        // const ctx = document.getElementById('myChart');
+        // Criando estrutura para plotar gráfico - dados
+
+            window.myChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                labels: momentos,
+                datasets: [{
+                    label: 'Pontuação',
+                    data: acertos,
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1,
+                    fill: false
+                }]
+                },
+                options: {
+                scales: {
+                    y: {
+                    beginAtZero: true,
+                    max: 10
+                    }
+                }
+                }
+            });
+         
+
+        console.log('----------------------------------------------')
+        console.log('Estes dados foram recebidos pela funcao "obterDadosGrafico" e passados para "plotarGrafico":')
+        console.log(acertos)
+
+        // Inserindo valores recebidos em estrutura para plotar o gráfico
+        // for (i = 0; i < acertos.length; i++) {
+        //     var registro = acertos[i];
+        //     labels.push(registro.momento_grafico);
+        //     dados.datasets[0].data.push(dado.acertos);
+        //     // dados.datasets[1].data.push(registro.temperatura);
+        // }
+
+        console.log('----------------------------------------------')
+        console.log('O gráfico será plotado com os respectivos valores:')
+        console.log('Labels:')
+        console.log(momentos)
+        console.log('Dados:')
+        console.log(dados.datasets)
+        console.log('----------------------------------------------')
+
+        
+    }
+
+    function grafico() {
+        graficoT.style.display = "block"
+        quiz.style.display = "none"
+    }
+
+    function voltar() {
+        graficoT.style.display = "none"
+        quiz.style.display = "block"
+    }
+
+    
+
+
 </script>

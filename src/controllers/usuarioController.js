@@ -85,7 +85,52 @@ function cadastrar(req, res) {
     }
 }
 
+function resposta(req, res) {
+    var porcentagem = req.body.acertosServer
+    var user = req.body.usuarioServer
+
+    usuarioModel.resposta(porcentagem, user)
+            .then(
+                function (resultado) {
+                    res.json(resultado);
+                }
+            ).catch(
+                function (erro) {
+                    console.log(erro);
+                    console.log(
+                        "\nErro no insert do resultado! Erro: ",
+                        erro.sqlMessage
+                    );
+                    res.status(500).json(erro.sqlMessage);
+                }
+            );  
+}
+
+function metrica(req, res) {
+    var user = req.params.user
+    
+    
+
+    usuarioModel.metrica(user)
+            .then(
+                function (resultado) {
+                    res.json(resultado);
+                }
+            ).catch(
+                function (erro) {
+                    console.log(erro);
+                    console.log(
+                        "\nErro nas métricas! Erro: ",
+                        erro.sqlMessage
+                    );
+                    res.status(500).json(erro.sqlMessage);
+                }
+            );  
+}
+
 module.exports = {
     autenticar,
-    cadastrar
+    cadastrar,
+    resposta,
+    metrica
 }
