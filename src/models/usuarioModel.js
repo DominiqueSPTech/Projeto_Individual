@@ -32,8 +32,16 @@ function resposta(porcentagem, user) {
         INSERT INTO tentativa (acertos, fkUsuario) VALUES (${porcentagem}, ${user});
     `;
     console.log("Executando a instrução SQL: \n" + instrucaoSql);
-    return database.executar(instrucaoSql);
+    return database.executar(instrucaoSql).then (function(result){
+        var idTentativa = result.insertId;
+
+    var instrucaoSqlhist = `
+        INSERT INTO historico (fkTentativa, fkQuiz) VALUES (${idTentativa}, 1)
+    `;
+    return database.executar(instrucaoSqlhist)
+    })
 }
+
 
 function metrica(user) {
     console.log("ACESSEI O USUARIO MODEL \n \n\t\t >> Se aqui der erro de 'Error: connect ECONNREFUSED',\n \t\t >> verifique suas credenciais de acesso ao banco\n \t\t >> e se o servidor de seu BD está rodando corretamente. \n\n function cadastrar(): user,");
@@ -41,7 +49,7 @@ function metrica(user) {
     // Insira exatamente a query do banco aqui, lembrando da nomenclatura exata nos valores
     //  e na ordem de inserção dos dados.
     var instrucaoSql = `
-    SELECT acertos, DATE_FORMAT(momento, '%d/%m/%Y %H:%i:%s') AS momento_grafico FROM tentativa WHERE fkUsuario = ${user} ORDER BY momento DESC;
+    SELECT acertos, DATE_FORMAT(dtTent, '%d/%m/%Y') AS momento_grafico FROM tentativa WHERE fkUsuario = ${user} ORDER BY idTentativa DESC;
     `;
     console.log("Executando a instrução SQL: \n" + instrucaoSql);
     return database.executar(instrucaoSql);

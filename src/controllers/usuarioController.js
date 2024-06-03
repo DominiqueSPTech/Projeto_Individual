@@ -106,6 +106,8 @@ function resposta(req, res) {
             );  
 }
 
+
+
 function metrica(req, res) {
     var user = req.params.user
     

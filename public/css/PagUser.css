@@ -42,6 +42,15 @@ body {
     font-weight: normal;
 }
 
+.sidebar p {
+    transition: all 0.3s ease;
+    text-decoration: none;
+}
+
+.sidebar p:hover {
+    transform: scale(1.1);
+}
+
 .content {
     flex: 1;
     padding: 20px;

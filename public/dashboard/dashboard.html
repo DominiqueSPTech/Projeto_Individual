@@ -12,10 +12,10 @@
         <h2>Menu</h2>
         <h3>Olá, <span id="b_usuario">usuário</span>!</h3>
         <h4>Seu nível: <span id="b_nivel">nível</span></h4>
-        
-            <p><a href="../index.html">Sair</a></p>
 
-            
+            <p onclick="grafico()">Ver Gráfico</p>
+        
+            <p><a href="../index.html">Sair</a></p>          
         
     </div>
 
@@ -34,7 +34,7 @@
 
         <div class="content">
             <h2>Questão 1</h2>
-            <p>She arrived at 8 a.m., opened the door and shouted "Good____!</p>
+            <p>She arrived at 8 a.m., opened the door and shouted "Good____!"</p>
             <label ><input id type="radio" name="Q1" value="Morning">Morning</label><br><br>
             <label ><input id type="radio" name="Q1" value="Night">Night</label><br><br>
             <label ><input id type="radio" name="Q1" value="Bye">Bye</label><br><br>
@@ -106,6 +106,7 @@
 </html>
 
 <script>
+    var quiz = 1
     var user = sessionStorage.ID_USUARIO;
     obterDadosGrafico(user)
     b_usuario.innerHTML = sessionStorage.NOME_USUARIO;
@@ -168,6 +169,7 @@
             }
     }
 
+
     function obterDadosGrafico(user) {
         
         if (!user) {
@@ -195,8 +197,8 @@
         var ctx = document.getElementById('myChart').getContext('2d');
 
         if (dados && dados.length > 0) {
-           var momentos = dados.map(dado => dado.momento_grafico);
-        var acertos = dados.map(dado => dado.acertos); 
+            var momentos = dados.map(dado => dado.momento_grafico);
+            var acertos = dados.map(dado => dado.acertos); 
         } else {
             console.log('iniciando plotagem do gráfico...');
         }
@@ -214,18 +216,19 @@
                 data: {
                 labels: momentos,
                 datasets: [{
-                    label: 'Pontuação',
+                    label: 'Pontuação em %',
                     data: acertos,
                     borderColor: 'rgba(75, 192, 192, 1)',
+                    backgroundColor: '#87cefa',
                     borderWidth: 1,
                     fill: false
                 }]
                 },
                 options: {
                 scales: {
-                    y: {
+                    y:{
                     beginAtZero: true,
-                    max: 10
+                    max: 100
                     }
                 }
                 }

@@ -127,11 +127,6 @@ header {
     background: linear-gradient(to top, #87cefa, rgba(255, 122, 89,0));
 }
 
-/* .card1.show {
-    opacity: 1;
-    height: auto;
-} */
-
 .card2 {
     /* transition: opacity 1s ease-out;
     opacity: 0;
