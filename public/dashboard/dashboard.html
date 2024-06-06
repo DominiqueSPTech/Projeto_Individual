@@ -13,9 +13,9 @@
         <h3>Olá, <span id="b_usuario">usuário</span>!</h3>
         <h4>Seu nível: <span id="b_nivel">nível</span></h4>
 
-            <p onclick="grafico()">Ver Gráfico</p>
+            <p onclick="grafico(), plotarGrafico()">Ver Gráfico</p>
         
-            <p><a href="../index.html">Sair</a></p>          
+            <p><a onclick="sair()">Sair</a></p>          
         
     </div>
 
@@ -28,7 +28,7 @@
             <button onclick="voltar()">Voltar para o Quiz</button>
         </div> 
     
-    <div id="quiz" class="main" style="margin-left: 32%; display:block">
+    <div id="quiz1" class="main" style="margin-left: 32%; display:block">
         <h1>Quiz de inglês</h1>
         
 
@@ -98,7 +98,7 @@
     <center>
         <div id="div_msg"></div>
         <button onclick="submit()">Enviar respostas</button>
-        <button onclick="grafico()">Ver Gráfico</button>
+        <button onclick="grafico(), plotarGrafico()">Ver Gráfico</button>
         
     </center>
     </div>
@@ -153,8 +153,7 @@
                         "Content-Type": "application/json",
                     },
                     body: JSON.stringify({
-                        // crie um atributo que recebe o valor recuperado aqui
-                        // Agora vá para o arquivo routes/usuario.js
+            
                         acertosServer: porcentagem,
                         usuarioServer: user
                     }),
@@ -166,7 +165,11 @@
                 radios.forEach(radio => {
                 radio.checked = false;
             });
+
+            
+
             }
+            
     }
 
 
@@ -182,7 +185,7 @@
                     response.json().then(function (resposta) {
                         console.log(`Dados recebidos: ${JSON.stringify(resposta)}`);
                         resposta.reverse();
-                        plotarGrafico(resposta, user); // Ensure `resposta` is passed correctly
+                        plotarGrafico(resposta, user);
                     });
                 } else {
                     console.error('Nenhum dado encontrado ou erro na API');
@@ -193,7 +196,10 @@
             });
     }
 
+
     function plotarGrafico(dados) {
+
+        
         var ctx = document.getElementById('myChart').getContext('2d');
 
         if (dados && dados.length > 0) {
@@ -202,17 +208,12 @@
         } else {
             console.log('iniciando plotagem do gráfico...');
         }
-        
 
         
-
-        // Criando estrutura para plotar gráfico - labels
-        // let labels = momentos;
-        // const ctx = document.getElementById('myChart');
-        // Criando estrutura para plotar gráfico - dados
+        
 
             window.myChart = new Chart(ctx, {
-                type: 'bar',
+                type: 'line',
                 data: {
                 labels: momentos,
                 datasets: [{
@@ -239,13 +240,6 @@
         console.log('Estes dados foram recebidos pela funcao "obterDadosGrafico" e passados para "plotarGrafico":')
         console.log(acertos)
 
-        // Inserindo valores recebidos em estrutura para plotar o gráfico
-        // for (i = 0; i < acertos.length; i++) {
-        //     var registro = acertos[i];
-        //     labels.push(registro.momento_grafico);
-        //     dados.datasets[0].data.push(dado.acertos);
-        //     // dados.datasets[1].data.push(registro.temperatura);
-        // }
 
         console.log('----------------------------------------------')
         console.log('O gráfico será plotado com os respectivos valores:')
@@ -259,15 +253,28 @@
     }
 
     function grafico() {
+
+        // window.location.href = 'dashboard.html';
+
         graficoT.style.display = "block"
-        quiz.style.display = "none"
+        quiz1.style.display = "none"
+
+ 
     }
 
     function voltar() {
         graficoT.style.display = "none"
-        quiz.style.display = "block"
+        quiz1.style.display = "block"
     }
 
+    function sair() {
+        sessionStorage.ID_USUARIO = ''
+        sessionStorage.NIVEL_USUARIO = ''
+        sessionStorage.NOME_USUARIO = ''
+        sessionStorage.EMAIL_USUARIO = ''
+
+        window.location.href = '../index.html'
+    }
     
 
 

@@ -49,7 +49,7 @@ function metrica(user) {
     // Insira exatamente a query do banco aqui, lembrando da nomenclatura exata nos valores
     //  e na ordem de inserção dos dados.
     var instrucaoSql = `
-    SELECT acertos, DATE_FORMAT(dtTent, '%d/%m/%Y') AS momento_grafico FROM tentativa WHERE fkUsuario = ${user} ORDER BY idTentativa DESC;
+    SELECT acertos, DATE_FORMAT(dtTent, '%d/%m/%Y') AS momento_grafico FROM tentativa WHERE fkUsuario = ${user} ORDER BY idTentativa;
     `;
     console.log("Executando a instrução SQL: \n" + instrucaoSql);
     return database.executar(instrucaoSql);
